@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:beans="http://www.springframework.org/schema/beans"
+			 xmlns:context="http://www.springframework.org/schema/context"
+			 xmlns:tx="http://www.springframework.org/schema/tx"
+			 xmlns:task="http://www.springframework.org/schema/task"
+			 xmlns:aws-messaging="http://www.springframework.org/schema/cloud/aws/messaging"
+			 xmlns:aws-context="http://www.springframework.org/schema/cloud/aws/context"
+			 xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/cloud/aws/messaging http://www.springframework.org/schema/cloud/aws/messaging/spring-cloud-aws-messaging.xsd http://www.springframework.org/schema/cloud/aws/context http://www.springframework.org/schema/cloud/aws/context/spring-cloud-aws-context.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.*" />
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<beans:bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource"
+		destroy-method="close">
+		<beans:property name="driverClassName" value="com.ibm.db2.jcc.DB2Driver" />
+		<beans:property name="url" value="" />
+		<beans:property name="username" value="" />
+		<beans:property name="password" value="" />
+	</beans:bean>
+	
+	<beans:bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource"></beans:property>
+		<beans:property name="hibernateProperties">
+			<beans:props>
+				<beans:prop key="hibernate.dialect">org.hibernate.dialect.DB2Dialect</beans:prop>
+				<beans:prop key="hibernate.format_sql">true</beans:prop>
+				<beans:prop key="hibernate.show_sql">true</beans:prop>
+				<beans:prop key="hibernate.jdbc.batch_size">100</beans:prop>
+			</beans:props>
+		</beans:property>
+	</beans:bean>
+
+	<!-- Transaction -->
+	<beans:bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<beans:property name="sessionFactory" ref="sessionFactory" />
+	</beans:bean>
+	
+	
+	<beans:bean id="processEngineConfiguration"
+		class="org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration">
+		<beans:property name="processEngineName" value="engine" />
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="transactionManager" ref="transactionManager" />
+		<beans:property name="databaseSchemaUpdate" value="true" />
+		<beans:property name="databaseSchema" value="DB2ADMIN" />
+		<beans:property name="databaseTablePrefix" value="DB2ADMIN." />
+		<beans:property name="jobExecutorActivate" value="true" />
+		<beans:property name="deploymentResources">
+			<beans:list>
+				<beans:value>classpath*:diagram_2.bpmn</beans:value>
+				<beans:value>classpath*:decisionTable.dmn</beans:value>			
+			</beans:list>
+		</beans:property>
+			
+	    <beans:property name="processEnginePlugins">
+	    	<beans:list>
+		        <beans:bean class="org.camunda.spin.plugin.impl.SpinProcessEnginePlugin" />
+		        <beans:bean class="org.camunda.connect.plugin.impl.ConnectProcessEnginePlugin" />
+	    		<beans:bean class="com.camunda.consulting.DmnDecisionChainingPlugin" />
+	    	</beans:list>
+   		</beans:property>
+			
+			
+		<beans:property name="dmnEngineConfiguration">
+			<beans:bean
+				class="org.camunda.bpm.dmn.engine.impl.DefaultDmnEngineConfiguration">
+				
+				<beans:property name="defaultInputExpressionExpressionLanguage"
+					value="FEEL" />
+			</beans:bean>
+		</beans:property>
+	    
+	</beans:bean>
+
+	<beans:bean id="processEngine"
+		class="org.camunda.bpm.engine.spring.ProcessEngineFactoryBean">
+		<beans:property name="processEngineConfiguration" ref="processEngineConfiguration" />
+	</beans:bean>
+	
+<!-- 	<beans:bean id="invoicePa" class="org.camunda.bpm.engine.spring.application.SpringServletProcessApplication" -->
+<!-- 		factory-bean="processEngine" /> -->
+
+	<beans:bean id="repositoryService" factory-bean="processEngine"
+		factory-method="getRepositoryService" />
+	<beans:bean id="runtimeService" factory-bean="processEngine"
+		factory-method="getRuntimeService" />
+	<beans:bean id="taskService" factory-bean="processEngine"
+		factory-method="getTaskService" />
+	<beans:bean id="historyService" factory-bean="processEngine"
+		factory-method="getHistoryService" />
+	<beans:bean id="managementService" factory-bean="processEngine"
+		factory-method="getManagementService" />
+
+	<beans:bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<beans:property name="messageConverters">
+			<beans:list>
+				<beans:ref bean="bpmJsonMessageConverter" />
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<!-- Configure bean to convert JSON to POJO and vice versa -->
+	<beans:bean id="bpmJsonMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+	</beans:bean>
+
+	<task:executor id="bpmThreadPoolTaskExecutor" pool-size="5-10"
+		queue-capacity="25" rejection-policy="CALLER_RUNS" />
+
+	<beans:bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
+
+</beans:beans>

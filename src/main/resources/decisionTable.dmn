@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/DMN/20151101/dmn.xsd" xmlns:biodi="http://bpmn.io/schema/dmn/biodi/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="definitions" name="definitions" namespace="http://camunda.org/schema/1.0/dmn">
+  <decision id="decideOnEntity" name="Decide on Entity">
+    <extensionElements>
+      <biodi:bounds x="150" y="150" width="180" height="80" />
+    </extensionElements>
+    <decisionTable id="decisionTable_1">
+      <input id="input_1" label="Type" camunda:inputVariable="name">
+        <inputExpression id="inputExpression_1" typeRef="string" expressionLanguage="FEEL">
+          <text></text>
+        </inputExpression>
+        <inputValues id="UnaryTests_1ot2z1i">
+          <text>"E","I",""</text>
+        </inputValues>
+      </input>
+      <output id="output_1" label="Type Of Entity" name="typeOfEntity" typeRef="string" />
+      <rule id="DecisionRule_06wciui">
+        <inputEntry id="UnaryTests_0vxhj3s">
+          <text>"E"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0vr378q">
+          <text>"ENTITY"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1e7i6kg">
+        <inputEntry id="UnaryTests_0a9oc2y">
+          <text>"I"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1p8o1t2">
+          <text>"INDIVIDUAL"</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ol69db">
+        <inputEntry id="UnaryTests_1q0ga25">
+          <text>""</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0qaujdk">
+          <text>"ENTITY"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>
