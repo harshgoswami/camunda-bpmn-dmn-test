@@ -89,16 +89,8 @@
 <!-- 	<beans:bean id="invoicePa" class="org.camunda.bpm.engine.spring.application.SpringServletProcessApplication" -->
 <!-- 		factory-bean="processEngine" /> -->
 
-	<beans:bean id="repositoryService" factory-bean="processEngine"
-		factory-method="getRepositoryService" />
 	<beans:bean id="runtimeService" factory-bean="processEngine"
 		factory-method="getRuntimeService" />
-	<beans:bean id="taskService" factory-bean="processEngine"
-		factory-method="getTaskService" />
-	<beans:bean id="historyService" factory-bean="processEngine"
-		factory-method="getHistoryService" />
-	<beans:bean id="managementService" factory-bean="processEngine"
-		factory-method="getManagementService" />
 
 	<beans:bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
@@ -113,10 +105,5 @@
 	<beans:bean id="bpmJsonMessageConverter"
 		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
 	</beans:bean>
-
-	<task:executor id="bpmThreadPoolTaskExecutor" pool-size="5-10"
-		queue-capacity="25" rejection-policy="CALLER_RUNS" />
-
-	<beans:bean id="restTemplate" class="org.springframework.web.client.RestTemplate" />
 
 </beans:beans>
