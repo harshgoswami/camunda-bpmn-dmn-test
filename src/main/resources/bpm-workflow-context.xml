@@ -20,9 +20,9 @@
 	<beans:bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource"
 		destroy-method="close">
 		<beans:property name="driverClassName" value="com.ibm.db2.jcc.DB2Driver" />
-		<beans:property name="url" value="" />
-		<beans:property name="username" value="" />
-		<beans:property name="password" value="" />
+		<beans:property name="url" value="jdbc:db2://10.62.142.230:5432/ASTRUSDB:driverType=4;fullyMaterializeLobData=true;fullyMaterializeInputStreams=true;progressiveStreaming=2;progresssiveLocators=2;" />
+		<beans:property name="username" value="atintusr" />
+		<beans:property name="password" value="E75mpmyT7Lg3tGYUZP" />
 	</beans:bean>
 	
 	<beans:bean id="sessionFactory"
@@ -54,30 +54,29 @@
 		<beans:property name="databaseSchema" value="DB2ADMIN" />
 		<beans:property name="databaseTablePrefix" value="DB2ADMIN." />
 		<beans:property name="jobExecutorActivate" value="true" />
-		<beans:property name="deploymentResources">
-			<beans:list>
-				<beans:value>classpath*:diagram_2.bpmn</beans:value>
-				<beans:value>classpath*:decisionTable.dmn</beans:value>			
-			</beans:list>
-		</beans:property>
+<!-- 		<beans:property name="deploymentResources">  -->
+<!-- 			<beans:list> -->
+<!-- 				<beans:value>classpath*:diagram_2.bpmn</beans:value> -->
+<!-- 				<beans:value>classpath*:decisionTable.dmn</beans:value>			 -->
+<!-- 			</beans:list> -->
+<!-- 		</beans:property> -->
 			
-	    <beans:property name="processEnginePlugins">
-	    	<beans:list>
-		        <beans:bean class="org.camunda.spin.plugin.impl.SpinProcessEnginePlugin" />
-		        <beans:bean class="org.camunda.connect.plugin.impl.ConnectProcessEnginePlugin" />
-	    		<beans:bean class="com.camunda.consulting.DmnDecisionChainingPlugin" />
-	    	</beans:list>
-   		</beans:property>
+<!-- 	    <beans:property name="processEnginePlugins"> -->
+<!-- 	    	<beans:list> -->
+<!-- 		        <beans:bean class="org.camunda.spin.plugin.impl.SpinProcessEnginePlugin" /> -->
+<!-- 		        <beans:bean class="org.camunda.connect.plugin.impl.ConnectProcessEnginePlugin" /> -->
+<!-- 	    		<beans:bean class="com.camunda.consulting.DmnDecisionChainingPlugin" /> -->
+<!-- 	    	</beans:list> -->
+<!--    		</beans:property> -->
 			
-			
-		<beans:property name="dmnEngineConfiguration">
-			<beans:bean
-				class="org.camunda.bpm.dmn.engine.impl.DefaultDmnEngineConfiguration">
+<!-- 		<beans:property name="dmnEngineConfiguration"> -->
+<!-- 			<beans:bean -->
+<!-- 				class="org.camunda.bpm.dmn.engine.impl.DefaultDmnEngineConfiguration"> -->
 				
-				<beans:property name="defaultInputExpressionExpressionLanguage"
-					value="FEEL" />
-			</beans:bean>
-		</beans:property>
+<!-- 				<beans:property name="defaultInputExpressionExpressionLanguage" -->
+<!-- 					value="FEEL" /> -->
+<!-- 			</beans:bean> -->
+<!-- 		</beans:property> -->
 	    
 	</beans:bean>
 
