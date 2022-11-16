@@ -17,7 +17,7 @@
 		<javax.servlet.api.version>3.0.1</javax.servlet.api.version>
 		<servlet.api.version>2.5</servlet.api.version>
 		<jackson.core.version>2.5.0</jackson.core.version>
-		<jackson.databind.version>2.5.0</jackson.databind.version>
+		<jackson.databind.version>2.12.7.1</jackson.databind.version>
 		<swagger4spring.web.version>0.3.5</swagger4spring.web.version>
 		<spring.security.core.version>4.0.3.RELEASE</spring.security.core.version>
 		<spring.security.config.version>4.0.3.RELEASE</spring.security.config.version>
